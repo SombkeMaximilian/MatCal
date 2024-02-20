@@ -14,6 +14,7 @@ namespace linalg {
     public:
         Matrix();
         Matrix(size_t dim);
+        Matrix(size_t dim, const std::vector<double>& elem);
         Matrix(size_t rows, size_t cols);
         Matrix(size_t rows, size_t cols, const std::vector<double>& elem);
 
@@ -22,6 +23,11 @@ namespace linalg {
 
         double& operator()(int row, int col);
         const double& operator()(int row, int col) const;
+
+        Matrix operator-() const;
+
+        Matrix& operator+=(const Matrix& m);
+        Matrix& operator-=(const Matrix& m);
     }; // Matrix
 
 } // linalg
