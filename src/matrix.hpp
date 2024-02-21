@@ -8,8 +8,6 @@ namespace linalg {
 
     template<typename T>
     class Matrix {
-        static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type");
-
     private:
         std::vector<T> elem;
         size_t rows;
