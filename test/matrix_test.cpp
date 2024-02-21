@@ -83,4 +83,6 @@ TEST(MatrixAccess, AccessElementOutOfRange) {
     linalg::Matrix m(init_dim);
 
     EXPECT_THROW({ double val{m(3, 0)}; }, std::out_of_range);
+    EXPECT_THROW({ double val{m(0, 3)}; }, std::out_of_range);
+    EXPECT_THROW({ double val{m(3, 3)}; }, std::out_of_range);
 }
