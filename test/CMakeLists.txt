@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(matrix_test matrix_test.cpp)
-target_link_libraries(matrix_test PRIVATE gtest_main linalg)
+target_link_libraries(matrix_test PRIVATE gtest_main)
 target_include_directories(matrix_test PRIVATE ../src)
 
 add_test(NAME matrix_test COMMAND matrix_test)
