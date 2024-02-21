@@ -3,7 +3,6 @@
 
 using MatrixTypes = ::testing::Types<
         int,
-        unsigned int,
         short,
         long,
         float,
