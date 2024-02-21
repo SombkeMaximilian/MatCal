@@ -52,21 +52,10 @@ namespace linalg {
             return elem[row * cols + col];
         }
 
-        Matrix operator-() const {
-            Matrix<T> result(rows, cols);
-
-            for ( size_t i = 0; i < elem.size(); ++i ) {
-                result.elem[i] = -elem[i];
-            }
-
-            return result;
-        }
-
         Matrix& operator+=(const Matrix<T>& m) {
             if ( (m.nRows() != rows) || (m.nCols() != cols) ) {
                 throw std::invalid_argument("Matrix dimensions do not match.");
             }
-
             for ( size_t i = 0; i < elem.size(); ++i ) {
                 elem[i] += m.elem[i];
             }
@@ -79,6 +68,40 @@ namespace linalg {
         }
 
     }; // Matrix
+
+    template<typename T>
+    Matrix<T> operator+(const Matrix<T>& a, const Matrix<T>& b) {
+        Matrix<T> result(a.nRows(), a.nCols());
+
+        if ( (a.nRows() != b.nRows()) || (a.nCols() != b.nCols()) ) {
+            throw std::invalid_argument("Matrix dimensions do not match.");
+        }
+        for ( size_t i = 0; i < a.nRows(); ++i ) {
+            for ( size_t j = 0; j < a.nCols(); j++ ) {
+                result(i, j) = a(i, j) + b(i, j);
+            }
+        }
+
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> operator-(const Matrix<T>& a, const Matrix<T>& b) {
+        return a + (-b);
+    }
+
+    template<typename T>
+    Matrix<T> operator-(const Matrix<T>& m) {
+        Matrix<T> result(m.nRows(), m.nCols());
+
+        for ( size_t i = 0; i < m.nRows(); ++i ) {
+            for ( size_t j = 0; j < m.nCols(); j++ ) {
+                result(i, j) = -m(i, j);
+            }
+        }
+
+        return result;
+    }
 
 } // linalg
 
