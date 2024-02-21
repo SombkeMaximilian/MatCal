@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(TEST_FILES
         matrix_constructor_test.cpp
         matrix_element_access_test.cpp
+        matrix_operator_test.cpp
         test_utils.hpp
 )
 
