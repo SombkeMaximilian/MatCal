@@ -67,6 +67,15 @@ namespace linalg {
             return *this += -m;
         }
 
+        Matrix& operator*=(const Matrix<T>& m) {
+            Matrix<T> result;
+
+            result = (*this) * m;
+            *this = std::move(result);
+
+            return *this;
+        }
+
     }; // Matrix
 
     template<typename T>
@@ -97,6 +106,24 @@ namespace linalg {
         for ( size_t i = 0; i < m.nRows(); ++i ) {
             for ( size_t j = 0; j < m.nCols(); j++ ) {
                 result(i, j) = -m(i, j);
+            }
+        }
+
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> operator*(const Matrix<T>& a, const Matrix<T>& b) {
+        Matrix<T> result(a.nRows(), b.nCols());
+
+        if ( a.nCols() != b.nRows() ) {
+            throw std::invalid_argument("Number of columns in A must match number of rows in B.");
+        }
+        for ( size_t i = 0; i < a.nRows(); ++i ) {
+            for ( size_t k = 0; k < a.nCols(); ++k ) {
+                for ( size_t j = 0; j < b.nCols(); ++j ) {
+                    result(i, j) += a(i, k) * b(k, j);
+                }
             }
         }
 
