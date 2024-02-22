@@ -60,3 +60,21 @@ TYPED_TEST(MatrixOperators, UnaryMinusOperator) {
         }
     }
 }
+
+TYPED_TEST(MatrixOperators, MultiplicationOperator) {
+    const size_t init_row1{2}, init_row2{3}, init_col1{3}, init_col2{2}, expected_dim{2};
+    std::vector<TypeParam> init_vec1{1, 2, 3, 4, 5, 6};
+    std::vector<TypeParam> init_vec2{6, 5, 4, 3, 2, 1};
+    std::vector<TypeParam> expected_vec{20, 14, 56, 41};
+    linalg::Matrix<TypeParam> test_matrix1(init_row1, init_col1, init_vec1);
+    linalg::Matrix<TypeParam> test_matrix2(init_row2, init_col2, init_vec2);
+    linalg::Matrix<TypeParam> result_matrix;
+    linalg::Matrix<TypeParam> expected_matrix(expected_dim, expected_vec);
+
+    result_matrix = test_matrix1 * test_matrix2;
+    for ( size_t i = 0; i < expected_dim; ++i ) {
+        for ( size_t j = 0; j < expected_dim; ++j ) {
+            expect_type_eq(result_matrix(i, j), expected_matrix(i, j));
+        }
+    }
+}
