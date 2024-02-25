@@ -8,12 +8,14 @@ namespace linalg {
 
     template<typename T>
     class Matrix {
+
     public:
         Matrix();
         Matrix(const Matrix&) = default;
         Matrix(Matrix&&) noexcept = default;
         Matrix& operator=(const Matrix&) = default;
         Matrix& operator=(Matrix&&) noexcept = default;
+        ~Matrix() = default;
 
         explicit Matrix(size_t dim);
         Matrix(size_t dim, const std::vector<T>& elem);
@@ -22,8 +24,8 @@ namespace linalg {
         Matrix(size_t rows, size_t cols, const std::vector<T>& elem);
         Matrix(size_t rows, size_t cols, std::vector<T>&& elem);
 
-        [[nodiscard]] size_t nRows() const;
-        [[nodiscard]] size_t nCols() const;
+        [[nodiscard]] size_t getRows() const;
+        [[nodiscard]] size_t getCols() const;
 
         T& operator()(size_t row, size_t col);
         const T& operator()(size_t row, size_t col) const;
@@ -32,9 +34,19 @@ namespace linalg {
         Matrix& operator-=(const Matrix<T>& other);
         Matrix& operator*=(const Matrix<T>& other);
 
-        Matrix operator+(const Matrix<T>& other) const;
-        Matrix operator-(const Matrix<T>& other) const;
-        Matrix operator-() const;
+        Matrix operator-() const &;
+        Matrix operator-() &&;
+
+        template<typename U> friend Matrix<U> operator+(const Matrix<U>& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> operator+(Matrix<U>&& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> operator+(const Matrix<U>& lhs, Matrix<U>&& rhs);
+        template<typename U> friend Matrix<U> operator+(Matrix<U>&& lhs, Matrix<U>&& rhs);
+
+        template<typename U> friend Matrix<U> operator-(const Matrix<U>& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> operator-(Matrix<U>&& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> operator-(const Matrix<U>& lhs, Matrix<U>&& rhs);
+        template<typename U> friend Matrix<U> operator-(Matrix<U>&& lhs, Matrix<U>&& rhs);
+
         Matrix operator*(const Matrix<T>& other) const;
 
         bool operator==(const Matrix<T>& other) const;
@@ -45,6 +57,8 @@ namespace linalg {
         size_t rows;
         size_t cols;
 
+        void negateInPlace();
+
     }; // Matrix
 
     template<typename T>
@@ -54,7 +68,7 @@ namespace linalg {
     Matrix<T>::Matrix(size_t dim) : rows{dim}, cols{dim}, elem(dim * dim) {}
 
     template<typename T>
-    Matrix<T>::Matrix(size_t dim, const std::vector<T> &elem) : rows{dim}, cols{dim}, elem{elem}  {
+    Matrix<T>::Matrix(size_t dim, const std::vector<T> &elem) : rows{dim}, cols{dim}, elem{elem} {
         if ( elem.size() != dim * dim ) {
             throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
         }
@@ -64,7 +78,7 @@ namespace linalg {
     Matrix<T>::Matrix(size_t rows, size_t cols) : rows{rows}, cols{cols}, elem(rows * cols) {}
 
     template<typename T>
-    Matrix<T>::Matrix(size_t dim, std::vector<T> &&elem) : rows{dim}, cols{dim}, elem{std::move(elem)}  {
+    Matrix<T>::Matrix(size_t dim, std::vector<T> &&elem) : rows{dim}, cols{dim}, elem{std::move(elem)} {
         if ( elem.size() != dim * dim ) {
             throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
         }
@@ -85,12 +99,12 @@ namespace linalg {
     }
 
     template<typename T>
-    size_t Matrix<T>::nRows() const {
+    size_t Matrix<T>::getRows() const {
         return rows;
     }
 
     template<typename T>
-    size_t Matrix<T>::nCols() const {
+    size_t Matrix<T>::getCols() const {
         return cols;
     }
 
@@ -131,24 +145,59 @@ namespace linalg {
     }
 
     template<typename T>
-    Matrix<T> Matrix<T>::operator+(const Matrix<T> &other) const {
+    Matrix<T> Matrix<T>::operator-() const & {
         Matrix<T> result{*this};
-        result += other;
+        result.negateInPlace();
         return result;
     }
 
     template<typename T>
-    Matrix<T> Matrix<T>::operator-(const Matrix<T> &other) const {
-        return (*this) + (-other);
+    Matrix<T> Matrix<T>::operator-() && {
+        negateInPlace();
+        return std::move(*this);
     }
 
     template<typename T>
-    Matrix<T> Matrix<T>::operator-() const {
-        Matrix<T> result(rows, cols);
-        for ( size_t i = 0; i < elem.size(); ++i ) {
-            result.elem[i] = -elem[i];
-        }
+    Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+        Matrix<T> result{lhs};
+        result += rhs;
         return result;
+    }
+
+    template<typename T>
+    Matrix<T> operator+(Matrix<T> &&lhs, const Matrix<T> &rhs) {
+        lhs += rhs;
+        return std::move(lhs);
+    }
+
+    template<typename T>
+    Matrix<T> operator+(const Matrix<T> &lhs, Matrix<T> &&rhs) {
+        return rhs + lhs;
+    }
+
+    template<typename T>
+    Matrix<T> operator+(Matrix<T> &&lhs, Matrix<T> &&rhs) {
+        return std::move(lhs) + rhs;
+    }
+
+    template<typename T>
+    Matrix<T> operator-(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+        return lhs + (-rhs);
+    }
+
+    template<typename T>
+    Matrix<T> operator-(Matrix<T> &&lhs, const Matrix<T> &rhs) {
+        return std::move(lhs) + (-rhs);
+    }
+
+    template<typename T>
+    Matrix<T> operator-(const Matrix<T> &lhs, Matrix<T> &&rhs) {
+        return lhs + (-std::move(rhs));
+    }
+
+    template<typename T>
+    Matrix<T> operator-(Matrix<T> &&lhs, Matrix<T> &&rhs) {
+        return std::move(lhs) + (-std::move(rhs));
     }
 
     template<typename T>
@@ -175,6 +224,14 @@ namespace linalg {
     template<typename T>
     bool Matrix<T>::operator!=(const Matrix<T> &other) const {
         return ( (rows != other.rows) || (cols != other.cols) || (elem != other.elem) );
+    }
+
+
+    template<typename T>
+    void Matrix<T>::negateInPlace() {
+        for ( size_t i = 0; i < elem.size(); ++i ) {
+            elem[i] = -elem[i];
+        }
     }
 
 } // linalg
