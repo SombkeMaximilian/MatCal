@@ -60,6 +60,7 @@ namespace linalg {
         size_t cols;
         std::vector<T> elem;
 
+        void validateMatrixDimensions();
         void negateInPlace();
 
     }; // Matrix
@@ -71,34 +72,26 @@ namespace linalg {
     Matrix<T>::Matrix(size_t dim) : rows{dim}, cols{dim}, elem(dim * dim) {}
 
     template<typename T>
-    Matrix<T>::Matrix(size_t dim, const std::vector<T> &elem) : rows{dim}, cols{dim}, elem{elem} {
-        if ( elem.size() != dim * dim ) {
-            throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
-        }
+    Matrix<T>::Matrix(size_t dim, const std::vector<T>& elem) : rows{dim}, cols{dim}, elem{elem} {
+        validateMatrixDimensions();
+    }
+
+    template<typename T>
+    Matrix<T>::Matrix(size_t dim, std::vector<T>&& elem) : rows{dim}, cols{dim}, elem{std::move(elem)} {
+        validateMatrixDimensions();
     }
 
     template<typename T>
     Matrix<T>::Matrix(size_t rows, size_t cols) : rows{rows}, cols{cols}, elem(rows * cols) {}
 
     template<typename T>
-    Matrix<T>::Matrix(size_t dim, std::vector<T> &&elem) : rows{dim}, cols{dim}, elem{std::move(elem)} {
-        if ( elem.size() != dim * dim ) {
-            throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
-        }
+    Matrix<T>::Matrix(size_t rows, size_t cols, const std::vector<T>& elem) : rows{rows}, cols{cols}, elem{elem} {
+        validateMatrixDimensions();
     }
 
     template<typename T>
-    Matrix<T>::Matrix(size_t rows, size_t cols, const std::vector<T> &elem) : rows{rows}, cols{cols}, elem{elem} {
-        if ( elem.size() != rows * cols ) {
-            throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
-        }
-    }
-
-    template<typename T>
-    Matrix<T>::Matrix(size_t rows, size_t cols, std::vector<T> &&elem) : rows{rows}, cols{cols}, elem{std::move(elem)} {
-        if ( elem.size() != rows * cols ) {
-            throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
-        }
+    Matrix<T>::Matrix(size_t rows, size_t cols, std::vector<T>&& elem) : rows{rows}, cols{cols}, elem{std::move(elem)} {
+        validateMatrixDimensions();
     }
 
     template<typename T>
@@ -247,6 +240,13 @@ namespace linalg {
         return ( (rows != other.rows) || (cols != other.cols) || (elem != other.elem) );
     }
 
+
+    template<typename T>
+    void Matrix<T>::validateMatrixDimensions() {
+        if ( elem.size() != rows * cols ) {
+            throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
+        }
+    }
 
     template<typename T>
     void Matrix<T>::negateInPlace() {
