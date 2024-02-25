@@ -6,9 +6,11 @@
 template<typename T>
 class MatrixElementAccess : public ::testing::Test {
 protected:
-    size_t init_dim{3};
+    size_t init_dim;
     linalg::Matrix<T> test_matrix;
+
     void SetUp() override {
+        init_dim = 3;
         test_matrix = linalg::Matrix<T>(init_dim);
     }
 };
