@@ -16,11 +16,11 @@ protected:
 TYPED_TEST_SUITE(MatrixElementAccess, MatrixTypes);
 
 TYPED_TEST(MatrixElementAccess, AccessElementOutOfRangeRow) {
-    EXPECT_THROW({ TypeParam val{this->test_matrix(3, 0)}; }, std::out_of_range);
+    EXPECT_THROW({ [[maybe_unused]] TypeParam val{this->test_matrix(3, 0)}; }, std::out_of_range);
 }
 TYPED_TEST(MatrixElementAccess, AccessElementOutOfRangeCol) {
-    EXPECT_THROW({ TypeParam val{this->test_matrix(0, 3)}; }, std::out_of_range);
+    EXPECT_THROW({ [[maybe_unused]] TypeParam val{this->test_matrix(0, 3)}; }, std::out_of_range);
 }
 TYPED_TEST(MatrixElementAccess, AccessElementOutOfRangeRowCol) {
-    EXPECT_THROW({ TypeParam val{this->test_matrix(3, 3)}; }, std::out_of_range);
+    EXPECT_THROW({ [[maybe_unused]] TypeParam val{this->test_matrix(3, 3)}; }, std::out_of_range);
 }
