@@ -26,7 +26,6 @@ TYPED_TEST(MatrixOperators, PlusOperator) {
         }
     }
 }
-
 TYPED_TEST(MatrixOperators, MinusOperator) {
     const size_t init_dim{2};
     std::vector<TypeParam> init_vec1{1, 8, 2, 9};
@@ -44,7 +43,6 @@ TYPED_TEST(MatrixOperators, MinusOperator) {
         }
     }
 }
-
 TYPED_TEST(MatrixOperators, UnaryMinusOperator) {
     const size_t init_dim{2};
     std::vector<TypeParam> init_vec{1, 2, 3, 4};
@@ -60,7 +58,6 @@ TYPED_TEST(MatrixOperators, UnaryMinusOperator) {
         }
     }
 }
-
 TYPED_TEST(MatrixOperators, MultiplicationOperator) {
     const size_t init_row1{2}, init_row2{3}, init_col1{3}, init_col2{2}, expected_dim{2};
     std::vector<TypeParam> init_vec1{1, 2, 3, 4, 5, 6};
