@@ -5,7 +5,24 @@
 #include "test_utils.hpp"
 
 template<typename T>
-class MatrixOperators : public ::testing::Test {};
+class MatrixOperators : public ::testing::Test {
+
+protected:
+
+    void testMatrixDimensions(linalg::Matrix<T>& m, size_t expected_rows, size_t expected_cols) {
+        EXPECT_EQ(m.getRows(), expected_rows);
+        EXPECT_EQ(m.getCols(), expected_cols);
+    }
+
+    void testMatrixElements(linalg::Matrix<T>& m, std::vector<T>& expected_values) {
+        for ( size_t i = 0; i < m.getRows(); ++i ) {
+            for ( size_t j = 0; j < m.getCols(); ++j ) {
+                expect_type_eq(m(i, j), expected_values[i * m.getCols() + j]);
+            }
+        }
+    }
+
+};
 
 TYPED_TEST_SUITE(MatrixOperators, MatrixTypes);
 
@@ -17,14 +34,8 @@ TYPED_TEST(MatrixOperators, PlusOperator) {
     linalg::Matrix<TypeParam> test_matrix1(init_dim, init_vec1);
     linalg::Matrix<TypeParam> test_matrix2(init_dim, init_vec2);
     linalg::Matrix<TypeParam> result_matrix;
-    linalg::Matrix<TypeParam> expected_matrix(init_dim, expected_vec);
-
     result_matrix = test_matrix1 + test_matrix2;
-    for ( size_t i = 0; i < init_dim; ++i ) {
-        for ( size_t j = 0; j < init_dim; ++j ) {
-            expect_type_eq(result_matrix(i, j), expected_matrix(i, j));
-        }
-    }
+    this->testMatrixElements(result_matrix, expected_vec);
 }
 TYPED_TEST(MatrixOperators, MinusOperator) {
     const size_t init_dim{2};
@@ -34,14 +45,8 @@ TYPED_TEST(MatrixOperators, MinusOperator) {
     linalg::Matrix<TypeParam> test_matrix1(init_dim, init_vec1);
     linalg::Matrix<TypeParam> test_matrix2(init_dim, init_vec2);
     linalg::Matrix<TypeParam> result_matrix;
-    linalg::Matrix<TypeParam> expected_matrix(init_dim, expected_vec);
-
     result_matrix = test_matrix1 - test_matrix2;
-    for ( size_t i = 0; i < init_dim; ++i ) {
-        for ( size_t j = 0; j < init_dim; ++j ) {
-            expect_type_eq(result_matrix(i, j), expected_matrix(i, j));
-        }
-    }
+    this->testMatrixElements(result_matrix, expected_vec);
 }
 TYPED_TEST(MatrixOperators, UnaryMinusOperator) {
     const size_t init_dim{2};
@@ -50,13 +55,8 @@ TYPED_TEST(MatrixOperators, UnaryMinusOperator) {
     linalg::Matrix<TypeParam> test_matrix(init_dim, init_vec);
     linalg::Matrix<TypeParam> result_matrix;
     linalg::Matrix<TypeParam> expected_matrix(init_dim, expected_vec);
-
     result_matrix = -test_matrix;
-    for ( size_t i = 0; i < init_dim; ++i ) {
-        for ( size_t j = 0; j < init_dim; ++j ) {
-            expect_type_eq(result_matrix(i, j), expected_matrix(i, j));
-        }
-    }
+    this->testMatrixElements(result_matrix, expected_vec);
 }
 TYPED_TEST(MatrixOperators, MultiplicationOperator) {
     const size_t init_row1{2}, init_row2{3}, init_col1{3}, init_col2{2}, expected_dim{2};
@@ -66,12 +66,7 @@ TYPED_TEST(MatrixOperators, MultiplicationOperator) {
     linalg::Matrix<TypeParam> test_matrix1(init_row1, init_col1, init_vec1);
     linalg::Matrix<TypeParam> test_matrix2(init_row2, init_col2, init_vec2);
     linalg::Matrix<TypeParam> result_matrix;
-    linalg::Matrix<TypeParam> expected_matrix(expected_dim, expected_vec);
-
     result_matrix = test_matrix1 * test_matrix2;
-    for ( size_t i = 0; i < expected_dim; ++i ) {
-        for ( size_t j = 0; j < expected_dim; ++j ) {
-            expect_type_eq(result_matrix(i, j), expected_matrix(i, j));
-        }
-    }
+    this->testMatrixDimensions(result_matrix, expected_dim, expected_dim);
+    this->testMatrixElements(result_matrix, expected_vec);
 }
