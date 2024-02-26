@@ -105,12 +105,12 @@ namespace linalg {
     }
 
     template<typename T>
-    T &Matrix<T>::operator()(size_t row, size_t col) {
+    T& Matrix<T>::operator()(size_t row, size_t col) {
         return const_cast<T&>(static_cast<const Matrix&>(*this)(row, col));
     }
 
     template<typename T>
-    const T &Matrix<T>::operator()(size_t row, size_t col) const {
+    const T& Matrix<T>::operator()(size_t row, size_t col) const {
         if ( (rows <= row) || (cols <= col) ) {
             throw std::out_of_range("Index out of range.");
         }
@@ -131,7 +131,7 @@ namespace linalg {
     }
 
     template<typename T>
-    Matrix<T>& Matrix<T>::operator+=(const Matrix<T> &other) {
+    Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& other) {
         if ( (rows != other.rows) || (cols != other.cols) ) {
             throw std::invalid_argument("Matrix dimensions do not match.");
         }
@@ -142,12 +142,12 @@ namespace linalg {
     }
 
     template<typename T>
-    Matrix<T>& Matrix<T>::operator-=(const Matrix<T> &other) {
+    Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& other) {
         return *this += -other;
     }
 
     template<typename T>
-    Matrix<T>& Matrix<T>::operator*=(const Matrix<T> &other) {
+    Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& other) {
         Matrix<T> result(rows, other.cols);
         if ( cols != other.rows ) {
             throw std::invalid_argument("Number of columns in A must match number of rows in B.");
@@ -164,79 +164,79 @@ namespace linalg {
     }
 
     template<typename T>
-    Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+    Matrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs) {
         Matrix<T> result{lhs};
         result += rhs;
         return result;
     }
 
     template<typename T>
-    Matrix<T> operator+(Matrix<T> &&lhs, const Matrix<T> &rhs) {
+    Matrix<T> operator+(Matrix<T>&& lhs, const Matrix<T>& rhs) {
         lhs += rhs;
         return std::move(lhs);
     }
 
     template<typename T>
-    Matrix<T> operator+(const Matrix<T> &lhs, Matrix<T> &&rhs) {
+    Matrix<T> operator+(const Matrix<T>& lhs, Matrix<T>&& rhs) {
         return rhs + lhs;
     }
 
     template<typename T>
-    Matrix<T> operator+(Matrix<T> &&lhs, Matrix<T> &&rhs) {
+    Matrix<T> operator+(Matrix<T>&& lhs, Matrix<T>&& rhs) {
         return std::move(lhs) + rhs;
     }
 
     template<typename T>
-    Matrix<T> operator-(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+    Matrix<T> operator-(const Matrix<T>& lhs, const Matrix<T>& rhs) {
         return lhs + (-rhs);
     }
 
     template<typename T>
-    Matrix<T> operator-(Matrix<T> &&lhs, const Matrix<T> &rhs) {
+    Matrix<T> operator-(Matrix<T>&& lhs, const Matrix<T>& rhs) {
         return std::move(lhs) + (-rhs);
     }
 
     template<typename T>
-    Matrix<T> operator-(const Matrix<T> &lhs, Matrix<T> &&rhs) {
+    Matrix<T> operator-(const Matrix<T>& lhs, Matrix<T>&& rhs) {
         return lhs + (-std::move(rhs));
     }
 
     template<typename T>
-    Matrix<T> operator-(Matrix<T> &&lhs, Matrix<T> &&rhs) {
+    Matrix<T> operator-(Matrix<T>&& lhs, Matrix<T>&& rhs) {
         return std::move(lhs) + (-std::move(rhs));
     }
 
     template<typename T>
-    Matrix<T> operator*(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+    Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs) {
         Matrix<T> result{lhs};
         result *= rhs;
         return result;
     }
 
     template<typename T>
-    Matrix<T> operator*(Matrix<T> &&lhs, const Matrix<T> &rhs) {
+    Matrix<T> operator*(Matrix<T>&& lhs, const Matrix<T>& rhs) {
         lhs *= rhs;
         return std::move(lhs);
     }
 
     template<typename T>
-    Matrix<T> operator*(const Matrix<T> &lhs, Matrix<T> &&rhs) {
+    Matrix<T> operator*(const Matrix<T>& lhs, Matrix<T>&& rhs) {
         rhs = lhs * rhs;
         return std::move(rhs);
     }
 
     template<typename T>
-    Matrix<T> operator*(Matrix<T> &&lhs, Matrix<T> &&rhs) {
+    Matrix<T> operator*(Matrix<T>&& lhs, Matrix<T>&& rhs) {
         return std::move(lhs) * rhs;
     }
 
     template<typename T>
-    bool Matrix<T>::operator==(const Matrix<T> &other) const {
+    bool Matrix<T>::operator==(const Matrix<T>& other) const {
         return ( (rows == other.rows) && (cols == other.cols) && (elem == other.elem) );
     }
 
     template<typename T>
-    bool Matrix<T>::operator!=(const Matrix<T> &other) const {
+    bool Matrix<T>::operator!=(const Matrix<T>& other) const {
         return ( (rows != other.rows) || (cols != other.cols) || (elem != other.elem) );
     }
 
