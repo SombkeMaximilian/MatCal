@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <vector>
+#include "traits/is_complex.hpp"
 
 namespace linalg {
 
@@ -58,6 +59,9 @@ namespace linalg {
         Matrix transpose() const &;
         Matrix transpose() &&;
 
+        Matrix hermitianConjugate() const &;
+        Matrix hermitianConjugate() &&;
+
     private:
         size_t rows;
         size_t cols;
@@ -67,6 +71,7 @@ namespace linalg {
 
         void negateInPlace();
         void transposeInPlace();
+        void complexConjugateInPlace();
 
     }; // Matrix
 
@@ -262,6 +267,21 @@ namespace linalg {
         return std::move(*this);
     }
 
+    template<typename T>
+    Matrix<T> Matrix<T>::hermitianConjugate() const & {
+        Matrix<T> result{*this};
+        result.transposeInPlace();
+        result.complexConjugateInPlace();
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> Matrix<T>::hermitianConjugate() && {
+        transposeInPlace();
+        complexConjugateInPlace();
+        return std::move(*this);
+    }
+
 
     template<typename T>
     void Matrix<T>::validateMatrixDimensions() {
@@ -295,6 +315,15 @@ namespace linalg {
             } while ( currIndex != start );
         }
         std::swap(rows, cols);
+    }
+
+    template<typename T>
+    void Matrix<T>::complexConjugateInPlace() {
+        if constexpr ( is_complex<T>::value ) {
+            for ( size_t i = 0; i < elem.size(); ++i ) {
+                elem[i] = std::conj(elem[i]);
+            }
+        }
     }
 
 } // linalg
