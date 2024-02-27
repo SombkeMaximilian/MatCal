@@ -55,13 +55,18 @@ namespace linalg {
         bool operator==(const Matrix<T>& other) const;
         bool operator!=(const Matrix<T>& other) const;
 
+        Matrix transpose() const &;
+        Matrix transpose() &&;
+
     private:
         size_t rows;
         size_t cols;
         std::vector<T> elem;
 
         void validateMatrixDimensions();
+
         void negateInPlace();
+        void transposeInPlace();
 
     }; // Matrix
 
@@ -240,6 +245,23 @@ namespace linalg {
         return ( (rows != other.rows) || (cols != other.cols) || (elem != other.elem) );
     }
 
+    template<typename T>
+    Matrix<T> Matrix<T>::transpose() const & {
+        Matrix<T> result(cols, rows);
+        for ( size_t i = 0; i < rows; ++i ) {
+            for ( size_t j = 0; j < cols; ++j ) {
+                result.elem[j * result.cols + i] = elem[i * cols + j];
+            }
+        }
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> Matrix<T>::transpose() && {
+        transposeInPlace();
+        return std::move(*this);
+    }
+
 
     template<typename T>
     void Matrix<T>::validateMatrixDimensions() {
@@ -253,6 +275,26 @@ namespace linalg {
         for ( size_t i = 0; i < elem.size(); ++i ) {
             elem[i] = -elem[i];
         }
+    }
+
+    template<typename T>
+    void Matrix<T>::transposeInPlace() {
+        std::vector<bool> visited(elem.size(), false);
+        size_t currIndex;
+        for ( size_t start = 1; start < elem.size() - 1; ++start ) {
+            if ( visited[start] ) {
+                continue;
+            }
+            currIndex = start;
+            do {
+                visited[currIndex] = true;
+                currIndex = rows * currIndex % (rows * cols - 1);
+                if ( !visited[currIndex] ) {
+                    std::swap(elem[start], elem[currIndex]);
+                }
+            } while ( currIndex != start );
+        }
+        std::swap(rows, cols);
     }
 
 } // linalg
