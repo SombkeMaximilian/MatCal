@@ -1,8 +1,8 @@
 #ifndef MATCAL_MATRIX_HPP
 #define MATCAL_MATRIX_HPP
 
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 namespace linalg {
 
