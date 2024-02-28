@@ -348,7 +348,7 @@ namespace linalg {
     }
 
     template<typename T>
-    Matrix<T>& Matrix<T>::hadamardProduct(const Matrix<T> &other) {
+    Matrix<T>& Matrix<T>::hadamardProduct(const Matrix<T>& other) {
         if ( compareMatrixDimensions(other) ) {
             throw std::invalid_argument("Matrix dimensions do not match.");
         }
