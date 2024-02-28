@@ -84,6 +84,7 @@ namespace linalg {
 
         void validateMatrixDimensions() const;
         void validateIndex(size_t row, size_t col) const;
+        bool compareMatrixDimensions(const Matrix& other) const;
 
         void negateInPlace();
         void transposeInPlace();
@@ -190,7 +191,7 @@ namespace linalg {
 
     template<typename T>
     Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& other) {
-        if ( (rows != other.rows) || (cols != other.cols) ) {
+        if ( compareMatrixDimensions(other) ) {
             throw std::invalid_argument("Matrix dimensions do not match.");
         }
         for ( size_t i = 0; i < elem.size(); ++i ) {
@@ -385,6 +386,11 @@ namespace linalg {
         if ( (rows <= row) || (cols <= col) ) {
             throw std::out_of_range("Index out of range.");
         }
+    }
+
+    template<typename T>
+    bool Matrix<T>::compareMatrixDimensions(const Matrix<T> &other) const {
+        return ( (rows != other.rows) || (cols != other.cols) );
     }
 
     template<typename T>
