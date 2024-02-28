@@ -77,7 +77,8 @@ namespace linalg {
         size_t cols;
         std::vector<T> elem;
 
-        void validateMatrixDimensions();
+        void validateMatrixDimensions() const;
+        void validateIndex(size_t row, size_t col) const;
 
         void negateInPlace();
         void transposeInPlace();
@@ -346,9 +347,16 @@ namespace linalg {
 
 
     template<typename T>
-    void Matrix<T>::validateMatrixDimensions() {
+    void Matrix<T>::validateMatrixDimensions() const {
         if ( elem.size() != rows * cols ) {
             throw std::invalid_argument("Matrix dimension incompatible with initializing vector.");
+        }
+    }
+
+    template<typename T>
+    void Matrix<T>::validateIndex(size_t row, size_t col) const {
+        if ( (rows <= row) || (cols <= col) ) {
+            throw std::out_of_range("Index out of range.");
         }
     }
 
