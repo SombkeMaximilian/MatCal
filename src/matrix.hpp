@@ -71,6 +71,12 @@ namespace linalg {
         template<typename U> friend Matrix<U> operator/(const Matrix<U>& lhs, const U& rhs);
         template<typename U> friend Matrix<U> operator/(Matrix<U>&& lhs, const U& rhs);
 
+        Matrix& hadamardProduct(const Matrix<T>& other);
+        template<typename U> friend Matrix<U> hadamardProduct(const Matrix<U>& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> hadamardProduct(Matrix<U>&& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> hadamardProduct(const Matrix<U>& lhs, Matrix<U>&& rhs);
+        template<typename U> friend Matrix<U> hadamardProduct(Matrix<U>&& lhs, Matrix<U>&& rhs);
+
         Matrix transpose() const &;
         Matrix transpose() &&;
 
@@ -338,6 +344,42 @@ namespace linalg {
     template<typename T>
     Matrix<T> operator/(Matrix<T>&& lhs, const T& rhs) {
         lhs /= rhs;
+        return std::move(lhs);
+    }
+
+    template<typename T>
+    Matrix<T>& Matrix<T>::hadamardProduct(const Matrix<T> &other) {
+        if ( compareMatrixDimensions(other) ) {
+            throw std::invalid_argument("Matrix dimensions do not match.");
+        }
+        for ( size_t i = 0; i < elem.size(); ++i ) {
+            elem[i] *= other.elem[i];
+        }
+        return *this;
+    }
+
+    template<typename T>
+    Matrix<T> hadamardProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+        Matrix<T> result{lhs};
+        result.hadamardProduct(rhs);
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> hadamardProduct(Matrix<T>&& lhs, const Matrix<T>& rhs) {
+        lhs.hadamardProduct(rhs);
+        return std::move(lhs);
+    }
+
+    template<typename T>
+    Matrix<T> hadamardProduct(const Matrix<T>& lhs, Matrix<T>&& rhs) {
+        rhs.hadamardProduct(lhs);
+        return std::move(rhs);
+    }
+
+    template<typename T>
+    Matrix<T> hadamardProduct(Matrix<T>&& lhs, Matrix<T>&& rhs) {
+        lhs.hadamardProduct(rhs);
         return std::move(lhs);
     }
 
