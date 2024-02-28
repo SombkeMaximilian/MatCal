@@ -28,6 +28,11 @@ namespace linalg {
         [[nodiscard]] size_t getRows() const;
         [[nodiscard]] size_t getCols() const;
 
+        void setDimensions(size_t newRowCount, size_t newColCount);
+        void setElements(const T& value);
+        void setElements(const std::vector<T>& values);
+        void setElements(std::vector<T>&& values);
+
         T& operator()(size_t row, size_t col);
         const T& operator()(size_t row, size_t col) const;
 
@@ -123,6 +128,30 @@ namespace linalg {
     template<typename T>
     size_t Matrix<T>::getCols() const {
         return cols;
+    }
+
+    template<typename T>
+    void Matrix<T>::setDimensions(size_t newRowCount, size_t newColCount) {
+        rows = newRowCount;
+        cols = newColCount;
+        validateMatrixDimensions();
+    }
+
+    template<typename T>
+    void Matrix<T>::setElements(const T& value) {
+        std::fill(elem.begin(), elem.end(), value);
+    }
+
+    template<typename T>
+    void Matrix<T>::setElements(const std::vector<T>& values) {
+        elem = values;
+        validateMatrixDimensions();
+    }
+
+    template<typename T>
+    void Matrix<T>::setElements(std::vector<T>&& values) {
+        elem = std::move(values);
+        validateMatrixDimensions();
     }
 
     template<typename T>
