@@ -37,6 +37,8 @@ namespace linalg {
         Matrix& operator+=(const Matrix<T>& other);
         Matrix& operator-=(const Matrix<T>& other);
         Matrix& operator*=(const Matrix<T>& other);
+        Matrix& operator*=(const T& scalar);
+        Matrix& operator/=(const T& scalar);
 
         template<typename U> friend Matrix<U> operator+(const Matrix<U>& lhs, const Matrix<U>& rhs);
         template<typename U> friend Matrix<U> operator+(Matrix<U>&& lhs, const Matrix<U>& rhs);
@@ -52,6 +54,14 @@ namespace linalg {
         template<typename U> friend Matrix<U> operator*(Matrix<U>&& lhs, const Matrix<U>& rhs);
         template<typename U> friend Matrix<U> operator*(const Matrix<U>& lhs, Matrix<U>&& rhs);
         template<typename U> friend Matrix<U> operator*(Matrix<U>&& lhs, Matrix<U>&& rhs);
+
+        template<typename U> friend Matrix<U> operator*(const Matrix<U>& lhs, const U& rhs);
+        template<typename U> friend Matrix<U> operator*(Matrix<U>&& lhs, const U& rhs);
+        template<typename U> friend Matrix<U> operator*(const U& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> operator*(const U& lhs, Matrix<U>&& rhs);
+
+        template<typename U> friend Matrix<U> operator/(const Matrix<U>& lhs, const U& rhs);
+        template<typename U> friend Matrix<U> operator/(Matrix<U>&& lhs, const U& rhs);
 
         bool operator==(const Matrix<T>& other) const;
         bool operator!=(const Matrix<T>& other) const;
@@ -174,6 +184,22 @@ namespace linalg {
     }
 
     template<typename T>
+    Matrix<T>& Matrix<T>::operator*=(const T& scalar) {
+        for ( size_t i = 0; i < elem.size(); ++i ) {
+            elem[i] *= scalar;
+        }
+        return *this;
+    }
+
+    template<typename T>
+    Matrix<T>& Matrix<T>::operator/=(const T& scalar) {
+        for ( size_t i = 0; i < elem.size(); ++i ) {
+            elem[i] /= scalar;
+        }
+        return *this;
+    }
+
+    template<typename T>
     Matrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs) {
         Matrix<T> result{lhs};
         result += rhs;
@@ -238,6 +264,42 @@ namespace linalg {
     template<typename T>
     Matrix<T> operator*(Matrix<T>&& lhs, Matrix<T>&& rhs) {
         return std::move(lhs) * rhs;
+    }
+
+    template<typename T>
+    Matrix<T> operator*(const Matrix<T>& lhs, const T& rhs) {
+        Matrix<T> result{lhs};
+        result *= rhs;
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> operator*(Matrix<T>&& lhs, const T& rhs) {
+        lhs *= rhs;
+        return std::move(lhs);
+    }
+
+    template<typename T>
+    Matrix<T> operator*(const T& lhs, const Matrix<T>& rhs) {
+        return rhs * lhs;
+    }
+
+    template<typename T>
+    Matrix<T> operator*(const T& lhs, Matrix<T>&& rhs) {
+        return std::move(rhs) * lhs;
+    }
+
+    template<typename T>
+    Matrix<T> operator/(const Matrix<T>& lhs, const T& rhs) {
+        Matrix<T> result{lhs};
+        result /= rhs;
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> operator/(Matrix<T>&& lhs, const T& rhs) {
+        lhs /= rhs;
+        return std::move(lhs);
     }
 
     template<typename T>
