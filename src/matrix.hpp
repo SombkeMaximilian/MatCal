@@ -132,9 +132,7 @@ namespace linalg {
 
     template<typename T>
     const T& Matrix<T>::operator()(size_t row, size_t col) const {
-        if ( (rows <= row) || (cols <= col) ) {
-            throw std::out_of_range("Index out of range.");
-        }
+        validateIndex(row, col);
         return elem[row * cols + col];
     }
 
