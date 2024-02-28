@@ -36,6 +36,9 @@ namespace linalg {
         T& operator()(size_t row, size_t col);
         const T& operator()(size_t row, size_t col) const;
 
+        bool operator==(const Matrix<T>& other) const;
+        bool operator!=(const Matrix<T>& other) const;
+
         Matrix operator-() const &;
         Matrix operator-() &&;
 
@@ -67,9 +70,6 @@ namespace linalg {
 
         template<typename U> friend Matrix<U> operator/(const Matrix<U>& lhs, const U& rhs);
         template<typename U> friend Matrix<U> operator/(Matrix<U>&& lhs, const U& rhs);
-
-        bool operator==(const Matrix<T>& other) const;
-        bool operator!=(const Matrix<T>& other) const;
 
         Matrix transpose() const &;
         Matrix transpose() &&;
@@ -163,6 +163,16 @@ namespace linalg {
     const T& Matrix<T>::operator()(size_t row, size_t col) const {
         validateIndex(row, col);
         return elem[row * cols + col];
+    }
+
+    template<typename T>
+    bool Matrix<T>::operator==(const Matrix<T>& other) const {
+        return ( (rows == other.rows) && (cols == other.cols) && (elem == other.elem) );
+    }
+
+    template<typename T>
+    bool Matrix<T>::operator!=(const Matrix<T>& other) const {
+        return ( (rows != other.rows) || (cols != other.cols) || (elem != other.elem) );
     }
 
     template<typename T>
@@ -328,16 +338,6 @@ namespace linalg {
     Matrix<T> operator/(Matrix<T>&& lhs, const T& rhs) {
         lhs /= rhs;
         return std::move(lhs);
-    }
-
-    template<typename T>
-    bool Matrix<T>::operator==(const Matrix<T>& other) const {
-        return ( (rows == other.rows) && (cols == other.cols) && (elem == other.elem) );
-    }
-
-    template<typename T>
-    bool Matrix<T>::operator!=(const Matrix<T>& other) const {
-        return ( (rows != other.rows) || (cols != other.cols) || (elem != other.elem) );
     }
 
     template<typename T>
