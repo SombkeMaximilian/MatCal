@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <complex>
+#include <vector>
 #include "matrix.hpp"
 #include "test_utils.hpp"
 
