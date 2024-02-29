@@ -110,3 +110,38 @@ TYPED_TEST(MatrixConstructor, ByDimsMismatch) {
         },
         std::invalid_argument);
 }
+
+
+template<typename T>
+class MatrixElements : public ::testing::Test {
+
+protected:
+    size_t init_dim{3};
+    linalg::Matrix<T> test_matrix;
+
+    void SetUp() override {
+        test_matrix = linalg::Matrix<T>(init_dim);
+    }
+
+}; // MatrixElements
+
+TYPED_TEST_SUITE(MatrixElements, MatrixTypes);
+
+TYPED_TEST(MatrixElements, AccessElementOutOfRangeRow) {
+    EXPECT_THROW({
+            [[maybe_unused]] TypeParam val{this->test_matrix(3, 0)};
+        },
+        std::out_of_range);
+}
+TYPED_TEST(MatrixElements, AccessElementOutOfRangeCol) {
+    EXPECT_THROW({
+            [[maybe_unused]] TypeParam val{this->test_matrix(0, 3)};
+        },
+        std::out_of_range);
+}
+TYPED_TEST(MatrixElements, AccessElementOutOfRangeRowCol) {
+    EXPECT_THROW({
+            [[maybe_unused]] TypeParam val{this->test_matrix(3, 3)};
+        },
+        std::out_of_range);
+}
