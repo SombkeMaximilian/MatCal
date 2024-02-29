@@ -77,6 +77,12 @@ namespace linalg {
         template<typename U> friend Matrix<U> hadamardProduct(const Matrix<U>& lhs, Matrix<U>&& rhs);
         template<typename U> friend Matrix<U> hadamardProduct(Matrix<U>&& lhs, Matrix<U>&& rhs);
 
+        Matrix& kroneckerProduct(const Matrix<T>& other);
+        template<typename U> friend Matrix<U> kroneckerProduct(const Matrix<U>& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> kroneckerProduct(Matrix<U>&& lhs, const Matrix<U>& rhs);
+        template<typename U> friend Matrix<U> kroneckerProduct(const Matrix<U>& lhs, Matrix<U>&& rhs);
+        template<typename U> friend Matrix<U> kroneckerProduct(Matrix<U>&& lhs, Matrix<U>&& rhs);
+
         Matrix transpose() const &;
         Matrix transpose() &&;
 
