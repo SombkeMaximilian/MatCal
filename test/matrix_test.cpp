@@ -99,14 +99,12 @@ TYPED_TEST(MatrixConstructor, ByDimsInitVecMove) {
     EXPECT_TRUE(this->initVecByDims.empty());
 }
 TYPED_TEST(MatrixConstructor, SquareMismatch) {
-    const std::vector<TypeParam> initVec(this->initDim * this->initDim + 1, 1);
     EXPECT_THROW({
             linalg::Matrix<TypeParam> test_matrix(this->initDim, this->initVecMismatch1);
         },
         std::invalid_argument);
 }
 TYPED_TEST(MatrixConstructor, ByDimsMismatch) {
-    const std::vector<TypeParam> init_vec(this->initRow * this->initCol + 1, 1);
     EXPECT_THROW({
             linalg::Matrix<TypeParam> test_matrix(this->initRow, this->initCol, this->initVecMismatch2);
         },
