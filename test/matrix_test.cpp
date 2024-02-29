@@ -72,9 +72,9 @@ TYPED_TEST(MatrixConstructor, Default) {
     this->testMatrixDimensions(this->matrixDefault, 0, 0);
 }
 TYPED_TEST(MatrixConstructor, Square) {
-    std::vector<TypeParam> expected_values(this->initDim * this->initDim, 0);
+    std::vector<TypeParam> expectedValues(this->initDim * this->initDim, 0);
     this->testMatrixDimensions(this->matrixSquare, this->initDim, this->initDim);
-    this->testMatrixElements(this->matrixSquare, expected_values);
+    this->testMatrixElements(this->matrixSquare, expectedValues);
 }
 TYPED_TEST(MatrixConstructor, SquareInitVecCopy) {
     this->testMatrixDimensions(this->matrixSquareCopy, this->initDim, this->initDim);
@@ -86,9 +86,9 @@ TYPED_TEST(MatrixConstructor, SquareInitVecMove) {
     EXPECT_TRUE(this->initVecSquare.empty());
 }
 TYPED_TEST(MatrixConstructor, ByDims) {
-    std::vector<TypeParam> expected_values(this->initRow * this->initCol, 0);
+    std::vector<TypeParam> expectedValues(this->initRow * this->initCol, 0);
     this->testMatrixDimensions(this->matrixByDims, this->initRow, this->initCol);
-    this->testMatrixElements(this->matrixByDims, expected_values);
+    this->testMatrixElements(this->matrixByDims, expectedValues);
 }
 TYPED_TEST(MatrixConstructor, ByDimsInitVecCopy) {
     this->testMatrixDimensions(this->matrixByDimsCopy, this->initRow, this->initCol);
@@ -117,11 +117,11 @@ template<typename T>
 class MatrixElements : public ::testing::Test {
 
 protected:
-    size_t init_dim{3};
-    linalg::Matrix<T> test_matrix;
+    size_t initDim{3};
+    linalg::Matrix<T> testMatrix;
 
     void SetUp() override {
-        test_matrix = linalg::Matrix<T>(init_dim);
+        testMatrix = linalg::Matrix<T>(initDim);
     }
 
 }; // MatrixElements
@@ -130,19 +130,19 @@ TYPED_TEST_SUITE(MatrixElements, MatrixTypes);
 
 TYPED_TEST(MatrixElements, AccessElementOutOfRangeRow) {
     EXPECT_THROW({
-            [[maybe_unused]] TypeParam val{this->test_matrix(3, 0)};
+            [[maybe_unused]] TypeParam val{this->testMatrix(3, 0)};
         },
         std::out_of_range);
 }
 TYPED_TEST(MatrixElements, AccessElementOutOfRangeCol) {
     EXPECT_THROW({
-            [[maybe_unused]] TypeParam val{this->test_matrix(0, 3)};
+            [[maybe_unused]] TypeParam val{this->testMatrix(0, 3)};
         },
         std::out_of_range);
 }
 TYPED_TEST(MatrixElements, AccessElementOutOfRangeRowCol) {
     EXPECT_THROW({
-            [[maybe_unused]] TypeParam val{this->test_matrix(3, 3)};
+            [[maybe_unused]] TypeParam val{this->testMatrix(3, 3)};
         },
         std::out_of_range);
 }
@@ -153,15 +153,15 @@ class MatrixArithmetics : public ::testing::Test {
 
 protected:
 
-    void testMatrixDimensions(linalg::Matrix<T>& m, size_t expected_rows, size_t expected_cols) {
-        EXPECT_EQ(m.getRows(), expected_rows);
-        EXPECT_EQ(m.getCols(), expected_cols);
+    void testMatrixDimensions(linalg::Matrix<T>& m, size_t expectedRows, size_t expectedCols) {
+        EXPECT_EQ(m.getRows(), expectedRows);
+        EXPECT_EQ(m.getCols(), expectedCols);
     }
 
-    void testMatrixElements(linalg::Matrix<T>& m, std::vector<T>& expected_values) {
+    void testMatrixElements(linalg::Matrix<T>& m, std::vector<T>& expectedValues) {
         for ( size_t i = 0; i < m.getRows(); ++i ) {
             for ( size_t j = 0; j < m.getCols(); ++j ) {
-                EXPECT_TYPE_EQ(m(i, j), expected_values[i * m.getCols() + j]);
+                EXPECT_TYPE_EQ(m(i, j), expectedValues[i * m.getCols() + j]);
             }
         }
     }
