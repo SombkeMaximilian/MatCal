@@ -390,6 +390,49 @@ namespace linalg {
     }
 
     template<typename T>
+    Matrix<T>& Matrix<T>::kroneckerProduct(const Matrix<T>& other) {
+        Matrix<T> result(rows * other.rows, cols * other.cols);
+        size_t resultIndex{0};
+        for ( size_t i = 0; i < rows; ++i ) {
+            for ( size_t k = 0; k < other.rows; ++k ) {
+                for ( size_t j = 0; j < cols; ++ j ) {
+                    T this_ij = elem[i * cols + j];
+                    for ( size_t l = 0; l < other.cols; ++l ) {
+                        result.elem[resultIndex++] = this_ij * other.elem[k * other.cols + l];
+                    }
+                }
+            }
+        }
+        *this = std::move(result);
+        return *this;
+    }
+
+    template<typename T>
+    Matrix<T> kroneckerProduct(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+        Matrix<T> result{lhs};
+        result.kroneckerProduct(rhs);
+        return result;
+    }
+
+    template<typename T>
+    Matrix<T> kroneckerProduct(Matrix<T>&& lhs, const Matrix<T>& rhs) {
+        lhs.kroneckerProduct(rhs);
+        return std::move(lhs);
+    }
+
+    template<typename T>
+    Matrix<T> kroneckerProduct(const Matrix<T>& lhs, Matrix<T>&& rhs) {
+        rhs = kroneckerProduct(lhs, rhs);
+        return std::move(rhs);
+    }
+
+    template<typename T>
+    Matrix<T> kroneckerProduct(Matrix<T>&& lhs, Matrix<T>&& rhs) {
+        lhs.kroneckerProduct(rhs);
+        return std::move(lhs);
+    }
+
+    template<typename T>
     Matrix<T> Matrix<T>::transpose() const & {
         Matrix<T> result(cols, rows);
         for ( size_t i = 0; i < rows; ++i ) {
