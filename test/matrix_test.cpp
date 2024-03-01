@@ -115,6 +115,42 @@ protected:
 
 TYPED_TEST_SUITE(MatrixElements, MatrixTypes);
 
+TYPED_TEST(MatrixElements, ModifyElement) {
+    TypeParam newValue{3};
+    std::vector<TypeParam> expectedValues(this->initDim * this->initDim);
+    expectedValues[1 * this->testMatrix.getCols() + 1] = newValue;
+    this->testMatrix(1, 1) = newValue;
+    this->testMatrixElements(this->testMatrix, expectedValues);
+}
+
+TYPED_TEST(MatrixElements, ResizeMatrix) {
+    size_t newRowCount{9};
+    size_t newColCount{1};
+    this->testMatrix.setDimensions(newRowCount, newColCount);
+    this->testMatrixDimensions(this->testMatrix, newRowCount, newColCount);
+}
+
+TYPED_TEST(MatrixElements, SetElementsToValue) {
+    TypeParam newValue{42};
+    std::vector<TypeParam> expectedValues(this->initDim * this->initDim, newValue);
+    this->testMatrix.setElements(newValue);
+    this->testMatrixElements(this->testMatrix, expectedValues);
+}
+
+TYPED_TEST(MatrixElements, SetElementsToVectorCopy) {
+    std::vector<TypeParam> newValues{1, 2, 3, 4, 5, 6, 7, 8, 9};
+    this->testMatrix.setElements(newValues);
+    this->testMatrixElements(this->testMatrix, newValues);
+}
+
+TYPED_TEST(MatrixElements, SetElementsToVectorMove) {
+    std::vector<TypeParam> newValues{1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<TypeParam> expectedValues{newValues};
+    this->testMatrix.setElements(std::move(newValues));
+    this->testMatrixElements(this->testMatrix, expectedValues);
+    EXPECT_TRUE(newValues.empty());
+}
+
 TYPED_TEST(MatrixElements, AccessElementOutOfRangeRow) {
     EXPECT_THROW({
             [[maybe_unused]] TypeParam val{this->testMatrix(3, 0)};
