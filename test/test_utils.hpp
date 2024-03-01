@@ -2,6 +2,8 @@
 #define MATCAL_TEST_UTILS_HPP
 
 #include <complex>
+#include <vector>
+#include "matrix.hpp"
 
 template<typename T>
 void EXPECT_TYPE_EQ(const T& actual, const T& expected) {
@@ -29,5 +31,24 @@ inline void EXPECT_TYPE_EQ(const std::complex<double>& actual, const std::comple
     EXPECT_DOUBLE_EQ(actual.real(), expected.real());
     EXPECT_DOUBLE_EQ(actual.imag(), expected.imag());
 }
+
+template<typename T>
+class MatrixTestBase : public ::testing::Test {
+
+protected:
+    void testMatrixDimensions(linalg::Matrix<T>& matrixTest, size_t expectedRows, size_t expectedCols) {
+        EXPECT_EQ(matrixTest.getRows(), expectedRows);
+        EXPECT_EQ(matrixTest.getCols(), expectedCols);
+    }
+
+    void testMatrixElements(linalg::Matrix<T>& matrixTest, std::vector<T>& expectedValues) {
+        for (size_t i = 0; i < matrixTest.getRows(); ++i) {
+            for (size_t j = 0; j < matrixTest.getCols(); ++j) {
+                EXPECT_TYPE_EQ(matrixTest(i, j), expectedValues[i * matrixTest.getCols() + j]);
+            }
+        }
+    }
+
+}; // MatrixTestBase
 
 #endif //MATCAL_TEST_UTILS_HPP
