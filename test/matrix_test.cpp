@@ -21,45 +21,80 @@ class MatrixConstructor : public MatrixTestBase<T> {
 TYPED_TEST_SUITE(MatrixConstructor, MatrixTypes);
 
 TYPED_TEST(MatrixConstructor, Default) {
-    this->testMatrixDimensions(this->matrixDefault, 0, 0);
+    linalg::Matrix<TypeParam> testMatrix;
+    this->testMatrixDimensions(testMatrix, 0, 0);
 }
+
 TYPED_TEST(MatrixConstructor, Square) {
-    std::vector<TypeParam> expectedValues(this->initDim * this->initDim, 0);
-    this->testMatrixDimensions(this->matrixSquare, this->initDim, this->initDim);
-    this->testMatrixElements(this->matrixSquare, expectedValues);
+    size_t initDim{3};
+    std::vector<TypeParam> expectedValues(initDim * initDim, 0);
+    linalg::Matrix<TypeParam> testMatrix(initDim);
+    this->testMatrixDimensions(testMatrix, initDim, initDim);
+    this->testMatrixElements(testMatrix, expectedValues);
 }
+
 TYPED_TEST(MatrixConstructor, SquareInitVecCopy) {
-    this->testMatrixDimensions(this->matrixSquareCopy, this->initDim, this->initDim);
-    this->testMatrixElements(this->matrixSquareCopy, this->expectedVecSquare);
+    size_t initDim{3};
+    std::vector<TypeParam> initVec{1, 2, 3, 4, 5, 6, 7, 8, 9};
+    linalg::Matrix<TypeParam> testMatrix(initDim, initVec);
+    this->testMatrixDimensions(testMatrix, initDim, initDim);
+    this->testMatrixElements(testMatrix, initVec);
 }
+
 TYPED_TEST(MatrixConstructor, SquareInitVecMove) {
-    this->testMatrixDimensions(this->matrixSquareMove, this->initDim, this->initDim);
-    this->testMatrixElements(this->matrixSquareMove, this->expectedVecSquare);
-    EXPECT_TRUE(this->initVecSquare.empty());
+    size_t initDim{3};
+    std::vector<TypeParam> initVec{1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<TypeParam> expectedValues{initVec};
+    linalg::Matrix<TypeParam> testMatrix(initDim, std::move(initVec));
+    this->testMatrixDimensions(testMatrix, initDim, initDim);
+    this->testMatrixElements(testMatrix, expectedValues);
+    EXPECT_TRUE(initVec.empty());
 }
+
 TYPED_TEST(MatrixConstructor, ByDims) {
-    std::vector<TypeParam> expectedValues(this->initRow * this->initCol, 0);
-    this->testMatrixDimensions(this->matrixByDims, this->initRow, this->initCol);
-    this->testMatrixElements(this->matrixByDims, expectedValues);
+    size_t initRow{2};
+    size_t initCol{3};
+    std::vector<TypeParam> expectedValues(initRow * initCol, 0);
+    linalg::Matrix<TypeParam> testMatrix(initRow, initCol);
+    this->testMatrixDimensions(testMatrix, initRow, initCol);
+    this->testMatrixElements(testMatrix, expectedValues);
 }
+
 TYPED_TEST(MatrixConstructor, ByDimsInitVecCopy) {
-    this->testMatrixDimensions(this->matrixByDimsCopy, this->initRow, this->initCol);
-    this->testMatrixElements(this->matrixByDimsCopy, this->expectedVecByDims);
+    size_t initRow{2};
+    size_t initCol{3};
+    std::vector<TypeParam> initVec{1, 2, 3, 4, 5, 6};
+    linalg::Matrix<TypeParam> testMatrix(initRow, initCol, initVec);
+    this->testMatrixDimensions(testMatrix, initRow, initCol);
+    this->testMatrixElements(testMatrix, initVec);
 }
+
 TYPED_TEST(MatrixConstructor, ByDimsInitVecMove) {
-    this->testMatrixDimensions(this->matrixByDimsMove, this->initRow, this->initCol);
-    this->testMatrixElements(this->matrixByDimsMove, this->expectedVecByDims);
-    EXPECT_TRUE(this->initVecByDims.empty());
+    size_t initRow{2};
+    size_t initCol{3};
+    std::vector<TypeParam> initVec{1, 2, 3, 4, 5, 6};
+    std::vector<TypeParam> expectedValues{initVec};
+    linalg::Matrix<TypeParam> testMatrix(initRow, initCol, std::move(initVec));
+    this->testMatrixDimensions(testMatrix, initRow, initCol);
+    this->testMatrixElements(testMatrix, expectedValues);
+    EXPECT_TRUE(initVec.empty());
 }
+
 TYPED_TEST(MatrixConstructor, SquareMismatch) {
+    size_t initDim{3};
+    std::vector<TypeParam> initVec(initDim * initDim + 1, 1);
     EXPECT_THROW({
-            linalg::Matrix<TypeParam> test_matrix(this->initDim, this->initVecMismatch1);
+            linalg::Matrix<TypeParam> testMatrix(initDim, initVec);
         },
         std::invalid_argument);
 }
+
 TYPED_TEST(MatrixConstructor, ByDimsMismatch) {
+    size_t initRow{3};
+    size_t initCol{4};
+    std::vector<TypeParam> initVec(initRow * initCol + 1, 1);
     EXPECT_THROW({
-            linalg::Matrix<TypeParam> test_matrix(this->initRow, this->initCol, this->initVecMismatch2);
+            linalg::Matrix<TypeParam> testMatrix(initRow, initCol, initVec);
         },
         std::invalid_argument);
 }
