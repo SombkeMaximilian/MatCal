@@ -5,7 +5,7 @@
 #include <vector>
 #include "traits/is_complex.hpp"
 
-namespace linalg {
+namespace matcal {
 
     template<typename T>
     class Matrix {
@@ -520,6 +520,6 @@ namespace linalg {
         }
     }
 
-} // linalg
+} // matcal
 
 #endif //MATCAL_MATRIX_HPP

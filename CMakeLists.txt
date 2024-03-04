@@ -18,7 +18,7 @@ add_subdirectory(src)
 add_subdirectory(test)
 
 add_executable(MatCal main.cpp)
-#target_link_libraries(MatCal PRIVATE linalg)
+#target_link_libraries(MatCal PRIVATE matcal)
 target_include_directories(MatCal PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
 enable_testing()

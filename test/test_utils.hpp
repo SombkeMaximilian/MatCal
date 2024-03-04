@@ -36,12 +36,12 @@ template<typename T>
 class MatrixTestBase : public ::testing::Test {
 
 protected:
-    void testMatrixDimensions(linalg::Matrix<T>& matrixTest, size_t expectedRows, size_t expectedCols) {
+    void testMatrixDimensions(matcal::Matrix<T>& matrixTest, size_t expectedRows, size_t expectedCols) {
         EXPECT_EQ(matrixTest.getRows(), expectedRows);
         EXPECT_EQ(matrixTest.getCols(), expectedCols);
     }
 
-    void testMatrixElements(linalg::Matrix<T>& matrixTest, std::vector<T>& expectedValues) {
+    void testMatrixElements(matcal::Matrix<T>& matrixTest, std::vector<T>& expectedValues) {
         for (size_t i = 0; i < matrixTest.getRows(); ++i) {
             for (size_t j = 0; j < matrixTest.getCols(); ++j) {
                 EXPECT_TYPE_EQ(matrixTest(i, j), expectedValues[i * matrixTest.getCols() + j]);
