@@ -11,6 +11,6 @@ set(TEST_FILES
 
 add_executable(matrix_test ${TEST_FILES})
 target_link_libraries(matrix_test PRIVATE gtest_main)
-target_include_directories(matrix_test PRIVATE ../src)
+target_include_directories(matrix_test PRIVATE ../include/matcal)
 
 add_test(NAME matrix_test COMMAND matrix_test)
