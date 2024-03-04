@@ -1,9 +1,9 @@
-#ifndef MATCAL_TEST_UTILS_HPP
-#define MATCAL_TEST_UTILS_HPP
+#ifndef MATCAL_TEST_UTILS_H
+#define MATCAL_TEST_UTILS_H
 
 #include <complex>
 #include <vector>
-#include "matrix.hpp"
+#include "matrix.h"
 
 template<typename T>
 void EXPECT_TYPE_EQ(const T& actual, const T& expected) {
@@ -51,4 +51,4 @@ protected:
 
 }; // MatrixTestBase
 
-#endif //MATCAL_TEST_UTILS_HPP
+#endif //MATCAL_TEST_UTILS_H

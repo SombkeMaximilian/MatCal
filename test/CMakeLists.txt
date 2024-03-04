@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(TEST_FILES
         matrix_test.cpp
-        test_utils.hpp
+        test_utils.h
 )
 
 add_executable(matrix_test ${TEST_FILES})

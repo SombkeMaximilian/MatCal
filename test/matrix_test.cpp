@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <complex>
 #include <vector>
-#include "matrix.hpp"
-#include "test_utils.hpp"
+#include "matrix.h"
+#include "test_utils.h"
 
 using MatrixTypes = ::testing::Types<
         int,

@@ -1,5 +1,5 @@
-#ifndef MATCAL_MATRIX_HPP
-#define MATCAL_MATRIX_HPP
+#ifndef MATCAL_MATRIX_H
+#define MATCAL_MATRIX_H
 
 #include <stdexcept>
 #include <vector>
@@ -522,4 +522,4 @@ namespace matcal {
 
 } // matcal
 
-#endif //MATCAL_MATRIX_HPP
+#endif //MATCAL_MATRIX_H
