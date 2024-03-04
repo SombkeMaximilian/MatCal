@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <vector>
-#include "../src/traits/is_complex.hpp"
+#include "../../src/traits/is_complex.hpp"
 
 namespace matcal {
 
