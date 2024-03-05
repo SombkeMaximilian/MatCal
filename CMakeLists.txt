@@ -14,10 +14,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_subdirectory(src)
 add_subdirectory(test)
 
 add_executable(MatCal examples/main.cpp)
-target_include_directories(MatCal PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(MatCal PRIVATE ${PROJECT_SOURCE_DIR}/include/matcal)
 
 enable_testing()

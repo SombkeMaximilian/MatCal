@@ -1,9 +1,9 @@
 #ifndef MATCAL_MATRIX_H
 #define MATCAL_MATRIX_H
 
+#include <complex>
 #include <stdexcept>
 #include <vector>
-#include "../../src/traits/is_complex.hpp"
 
 namespace matcal {
 
@@ -93,6 +93,9 @@ namespace matcal {
         size_t rows;
         size_t cols;
         std::vector<T> elem;
+
+        template<typename U> struct is_complex : std::false_type {};
+        template<typename U> struct is_complex<std::complex<U>> : std::true_type {};
 
         void validateMatrixDimensions() const;
         void validateIndex(size_t row, size_t col) const;
